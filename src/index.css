@@ -10,7 +10,14 @@
     box-sizing: border-box;
     font-family: Poppins;
 }
+::-webkit-scrollbar{
+    display: none;
+}
 .chat-bg{
     background: url(./background.png);
 
+}
+.chat-container{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
 }
