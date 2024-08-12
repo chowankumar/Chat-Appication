@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import assets from "./../assets/assets"
 
 const login = () => {
+
+  const [currState,setCurrState] = useState("Sign Up")
   return (
 
     <div className='chat-bg min-h-[100vh] flex items-center justify-evenly '>
@@ -10,16 +12,17 @@ const login = () => {
 
       <form action="" className='bg-white 
         p-[30px] flex flex-col gap-[20px] rounded-[10px]'>
-        <h2 className='font-[500]'>Sign Up</h2>
-
-        <input
+        <h2 className='font-[500]'>{currState}</h2>
+         {
+          currState === "Sign Up"?<input
           type="text"
           placeholder='username'
           className='p-y-[8px] p-x-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
+           required
 
-          required
-
-        />
+        />:<></>
+       
+         }
 
         <input
           type="email"
@@ -35,7 +38,7 @@ const login = () => {
         />
 
 
-        <button type='submit' className='p-[10px] bg-[#077EFF] text-white text-[16px] border-none rounded-[4px] cursor-pointer'>Sign Up</button>
+        <button type='submit' className='p-[10px] bg-[#077EFF] text-white text-[16px] border-none rounded-[4px] cursor-pointer'>{currState === "Sign Up"?"Create Account":"Login"}</button>
 
         <div className="flex gap-[5px] text-[12px] text-[#808080]">
           <input
@@ -44,8 +47,16 @@ const login = () => {
         </div>
         <div className='flex flex-col gap-5'>
 
-          <p className='text-[13px] text-[#5c5c5c]'>Already have and account?  <span className='font-[500] text-[#077EFF]
-          cursor-pointer'>click here</span></p>
+          {
+            currState === "Sign Up"?
+            <p className='text-[13px] text-[#5c5c5c]'>Already have and account?<span className='font-[500] text-[#077EFF]
+            cursor-pointer' onClick={()=>setCurrState("Login")}>click here</span></p>:
+            <p className='text-[13px] text-[#5c5c5c]'>Create an Account <span className='font-[500] text-[#077EFF]
+            cursor-pointer' onClick={()=>setCurrState("Sign Up")}>click here</span></p>
+
+          }
+
+         
 
         </div>
 
