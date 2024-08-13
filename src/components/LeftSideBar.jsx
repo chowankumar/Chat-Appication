@@ -2,6 +2,7 @@ import React from 'react'
 import assets from "./../assets/assets"
 
 const LeftSideBar = () => {
+    
     return (
         <div className='bg-[#001030]
          text-white h-[75vh]'>
@@ -9,9 +10,16 @@ const LeftSideBar = () => {
             <div className="p-[20px]">
                 <div className="flex justify-between items-center">
                     <img src={assets.logo} alt="" className='max-w-[140px]' />
-                    <div className='menu'>
+                    <div className='menu relative py-[10px]'>
                         <img src={assets.menu_icon} alt=""  
                         className='max-h-[20px] opacity-[0.6] cursor-pointer'/>
+                        <div className="sub-menu absolute top-[100%] right-0 w-[130px] p-[20px]
+                        rounded-[5px] bg-white text-black hidden">
+                            <p className='cursor-pointer text-[14px]'>Edit Profile</p>
+                            <hr className='border-none h-[1px] bg-[#a4a4a4] my-[8px]'/>
+                            <p className='cursor-pointer text-[14px]'>Logout</p>
+
+                        </div>
                     </div>
                 </div>
 
