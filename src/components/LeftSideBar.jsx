@@ -1,7 +1,10 @@
 import React from 'react'
 import assets from "./../assets/assets"
+import { useNavigate } from 'react-router-dom'
 
 const LeftSideBar = () => {
+
+    const navigate = useNavigate();
     
     return (
         <div className='bg-[#001030]
@@ -15,7 +18,9 @@ const LeftSideBar = () => {
                         className='max-h-[20px] opacity-[0.6] cursor-pointer'/>
                         <div className="sub-menu absolute top-[100%] right-0 w-[130px] p-[20px]
                         rounded-[5px] bg-white text-black hidden">
-                            <p className='cursor-pointer text-[14px]'>Edit Profile</p>
+                            <p 
+                            onClick={()=>navigate('/profile')}
+                            className='cursor-pointer text-[14px]'>Edit Profile</p>
                             <hr className='border-none h-[1px] bg-[#a4a4a4] my-[8px]'/>
                             <p className='cursor-pointer text-[14px]'>Logout</p>
 
