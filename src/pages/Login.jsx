@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import assets from "./../assets/assets"
-import { signup,Login } from '../config/firebase'
+import { signup,Login,logout } from '../config/firebase'
 
 const login = () => {
 
@@ -44,7 +44,7 @@ const login = () => {
               value={userName}
               type="text"
               placeholder='username'
-              className='p-y-[8px] p-x-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
+              className='py-[8px] px-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
               required
 
             /> : <></>
@@ -56,7 +56,7 @@ const login = () => {
           value={email}
           type="email"
           placeholder='Email address'
-          className='p-y-[8px] p-x-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
+          className='py-[8px] px-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
         />
 
 
@@ -65,7 +65,7 @@ const login = () => {
           value={password}
           type="password"
           placeholder='password'
-          className='p-y-[8px] p-x-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
+          className='py-[8px] px-[10px] border border-[#c9c9c9] rounded-[4px] outline-[#077eff]'
         />
 
 
