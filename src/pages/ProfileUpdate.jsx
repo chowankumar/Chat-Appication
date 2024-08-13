@@ -101,12 +101,13 @@ const ProfileUpdate = () => {
           <label htmlFor="avatar" className='flex items-center gap-[10px] text-gray-500 cursor-pointer'>
 
             <input 
-            onClick={(e) => setImage(e.target.files[0])} type="file" 
+            onClick={(e) => setImage(e.target.files[0])} 
+            type="file" 
             id='avatar' 
             accept='.png, .jpg, .jpeg' 
             hidden />
 
-            <img src={image ? URL.createObjectURL(image) : assets.avatar_icon} alt=""
+            <img src={image ? URL.createObjectURL(image) :prevImage ? prevImage :  assets.avatar_icon} alt=""
               className='w-[50px] rounded-[50%]' />
             upload profile image
 
@@ -135,7 +136,7 @@ const ProfileUpdate = () => {
 
         </form>
         <img className='profile-pic max-w-[160px]
-        my-[20px] mx-auto rounded-[50%]  ' src={image ? URL.createObjectURL(image) : assets.logo_icon} alt="" />
+        my-[20px] mx-auto rounded-[50%]  ' src={image ? URL.createObjectURL(image) : prevImage ? prevImage : assets.logo_icon} alt="" />
       </div>
     </div>
   )
