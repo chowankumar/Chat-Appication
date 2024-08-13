@@ -46,7 +46,7 @@ const AppContextProvider = (props)=>{
         if(userData){
             const chatRef = doc(db,'chats',userData.id);
             const unSub = onSnapshot(chatRef,async(res)=>{
-                const chatItems = res.data().chatsData;
+                const chatItems = res.data().chatData;
                 const tempData = [];
 
                 for(const item of chatItems){
@@ -61,7 +61,7 @@ const AppContextProvider = (props)=>{
                 unSub()
             }
         }
-    },[userData])
+    },[userDataa])
 
        
 
