@@ -2,7 +2,10 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, si
 import { initializeApp } from "firebase/app";
 import { getFirestore, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
- 
+import {doc} from "firebase/firestore"
+
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyAtlTdls35Jxb3-IrzpUR62ZR9o-Kb4EIg",
   authDomain: "chat-app-27532.firebaseapp.com",
