@@ -57,7 +57,7 @@ const Login = async(email,password)=>{
 
 const logout = async()=>{
     try {
-        await signOu(auth)
+        await signOut(auth)
         
     } catch (error) {
         console.error(error)
