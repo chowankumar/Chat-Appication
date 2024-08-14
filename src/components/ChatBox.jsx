@@ -1,20 +1,71 @@
 import React, { useContext, useEffect, useState } from 'react'
 import assets from "./../assets/assets"
 import { AppContext } from '../context/AppContext'
-import { onSnapshot,doc } from 'firebase/firestore';
+import { onSnapshot,doc, updateDoc, getDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../config/firebase';
+
 
 const ChatBox = () => {
 
-  const {userData,messageId,chatUser,messages,setMessages} = useContext(AppContext);
+  const {userData,messageId,chatUser,message,setMessages} = useContext(AppContext);
 
   const [input,setInput] = useState("");
+
+
+  //send messages function
+  const sendMessage = async()=>{
+   
+    try {
+      if(input && messageId){
+ 
+
+        await updateDoc(doc(db,'messages',messageId),{
+          messages:arrayUnion(JSON.stringify({
+            sId: userData.id,
+            text: input,
+            createdAt: new Date()
+          }))
+        
+        }) 
+
+        const userIDs = [chatUser.rId,userData.id];
+
+        userIDs.forEach(async (id) =>{
+          const userChatRef = doc(db,'chats',id);
+          const userChatsSnapshot = await getDoc(userChatRef);
+
+          if(userChatsSnapshot.exists()){
+            const userChatData = userChatsSnapshot.data();
+            const chatIndex = userChatData.chatData.findIndex((c)=> c.messageId === messageId);
+            userChatData.chatData[chatIndex].lastMessage = input.slice(0,30 );
+            userChatData.chatData[chatIndex].updatedAt = Date.now();
+            if(userChatData.chatData[chatIndex].rId === userData.id){
+              userChatData.chatData[chatIndex].messageSeen = false;
+            }
+            await updateDoc(userChatRef,{
+              chatData : userChatData.chatData
+            })
+
+          }
+        })
+      }
+
+
+      setInput("")
+
+      
+    } catch (error) {
+      console.log(error.message)
+      
+    }
+
+  }
 
   useEffect(()=>{
     if(messageId){
       const unSub = onSnapshot(doc(db,'messages',messageId),(res)=>{
         setMessages(res.data().messages.reverse())
-        console.log(res.data().messages.reverse())
+        
       })
       return ()=>{
         unSub()
@@ -83,7 +134,13 @@ const ChatBox = () => {
 
       <div className='flex items-center gap-[12px]
       py-[10px] px-[15px] bg-white absolute left-0 right-0 bottom-0'>
-        <input type="text" placeholder='Send a message' className='flex-1 border-none outline-none' />
+        
+        <input 
+        type="text" 
+        placeholder='Send a message' className='flex-1 border-none outline-none'
+         onChange={(e)=>setInput(e.target.value)} 
+         value={input}
+         />
 
         <input type="file" id='image' accept='image/png, image/jpeg' hidden
         />
@@ -92,7 +149,7 @@ const ChatBox = () => {
           <img src={assets.gallery_icon} alt="" className='w-[22px] cursor-pointer' />
         </label>
 
-        <img src={assets.send_button} alt="" className='w-[32px] cursor-pointer' />
+        <img onClick={sendMessage} src={assets.send_button} alt="" className='w-[32px] cursor-pointer' />
       </div>
     </div>
   )

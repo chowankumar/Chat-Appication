@@ -56,8 +56,8 @@ const LeftSideBar = () => {
 
     //addchat
     const addChat = async () => {
-        const messageRef = collection(db, "messages");
-        const chatRef = collection(db, "chats");
+        const messageRef = collection(db,"messages");
+        const chatRef = collection(db,"chats");
         try {
             const newMessageRef = doc(messageRef);
 
@@ -68,8 +68,8 @@ const LeftSideBar = () => {
 
             await updateDoc(doc(chatRef, user.id), {
                 chatData: arrayUnion({
-                    messageId: newMessageRef.id,
-                    lastMessage: "",
+                    messageId:newMessageRef.id,
+                    lastMessage:"",
                     rId: userData.id,
                     updatedAt: Date.now(),
                     messageSeen: true
@@ -92,6 +92,7 @@ const LeftSideBar = () => {
 
     }
 
+    
     //set the chat on which we click
 
 
@@ -163,6 +164,7 @@ const LeftSideBar = () => {
                             <div className='flex flex-col'>
                                 <p>{item.userData.name}</p>
                                 <span>{item.lastMessage}</span>
+                                
 
                             </div>
                         </div>))

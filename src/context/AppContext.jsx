@@ -14,6 +14,9 @@ const AppContextProvider = (props)=>{
     const[chatUser,setChatUser] = useState(null)
 
 
+
+
+
     const loadUserData = async (uid)=>{
         try {
             const userRef = doc(db,'users',uid);
@@ -44,6 +47,9 @@ const AppContextProvider = (props)=>{
         }
     }
 
+
+
+    
     //fetch the chatData
 
     useEffect(()=>{
