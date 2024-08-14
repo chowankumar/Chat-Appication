@@ -1,30 +1,38 @@
 import React, { useContext, useState } from 'react'
 import assets from "./../assets/assets"
 import { useNavigate } from 'react-router-dom'
-import { collection, query,where,getDocs, serverTimestamp, updateDoc,doc,setDoc ,arrayUnion} from 'firebase/firestore';
+import { collection, query, where, getDocs, serverTimestamp, updateDoc, doc, setDoc, arrayUnion } from 'firebase/firestore';
 import { db } from "../config/firebase"
 import { AppContext } from "./../context/AppContext"
 
 const LeftSideBar = () => {
 
     const navigate = useNavigate();
-    const { userData } = useContext(AppContext);
+    const { userData, chatData } = useContext(AppContext);
     const [user, setUser] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
 
 
     const inputHandler = async (e) => {
-       
+
         try {
             const input = e.target.value;
             if (input) {
                 setShowSearch(true);
                 const userRef = collection(db, 'users');
-                const q = query(userRef,where("username", "==", input.toLowerCase()));
+                const q = query(userRef, where("username", "==", input.toLowerCase()));
                 const querySnap = await getDocs(q);
-                if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id ) {
-                   
-                setUser(querySnap.docs[0].data())
+                if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
+                    let userExist = false;
+                    chatData.map((user) => {
+                        if (user.rId == querySnap.docs[0].data().id) {
+                            userExist = true
+                        }
+                    })
+                    if (!userExist) {
+                        setUser(querySnap.docs[0].data())
+
+                    }
 
                 } else {
                     setUser(null)
@@ -40,39 +48,39 @@ const LeftSideBar = () => {
     }
 
     //addchat
-    const  addChat = async()=>{
-        const messageRef = collection(db,"message");
-        const chatRef = collection(db,"chats");
+    const addChat = async () => {
+        const messageRef = collection(db, "messages");
+        const chatRef = collection(db, "chats");
         try {
             const newMessageRef = doc(messageRef);
 
-            await setDoc(newMessageRef,{
-                createdAt:serverTimestamp(),
-                message:[]
+            await setDoc(newMessageRef, {
+                createdAt: serverTimestamp(),
+                messages: []
             })
-            
-            await updateDoc(doc,(chatRef,user.id),{
-                chatData:arrayUnion({
-                    messageId:newMessageRef.id,
-                    lastMessage:"",
-                    rId:userData.id,
-                    updatedAt:Date.now(),
-                    messageSeen:true
+
+            await updateDoc(doc(chatRef, user.id), {
+                chatData: arrayUnion({
+                    messageId: newMessageRef.id,
+                    lastMessage: "",
+                    rId: userData.id,
+                    updatedAt: Date.now(),
+                    messageSeen: true
                 })
             })
-            await updateDoc(doc,(chatRef,userData.id),{
-                chatData:arrayUnion({
-                    messageId:newMessageRef.id,
-                    lastMessage:"",
-                    rId:user.id,
-                    updatedAt:Date.now(),
-                    messageSeen:true
+            await updateDoc(doc(chatRef, userData.id), {
+                chatData: arrayUnion({
+                    messageId: newMessageRef.id,
+                    lastMessage: "",
+                    rId: user.id,
+                    updatedAt: Date.now(),
+                    messageSeen: true
                 })
             })
         } catch (error) {
-            
+
             console.error(error)
-            
+
         }
 
     }
@@ -117,19 +125,19 @@ const LeftSideBar = () => {
             <div className="flex flex-col gap-4 h-[70%] overflow-y-scroll">
                 {showSearch && user ? <div className='friends add-user 
                 flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]'
-                onClick={addChat}>
+                    onClick={addChat}>
                     <img
                         src={user.avatar}
                         className='w-[35px]
                     aspect-[1/1] rounded-[50%]' />
                     <p>{user.name}</p>
 
-                </div> : <></> }
+                </div> : <></>}
 
 
 
 
-                     {/* Array(12).fill("").map((item, index) => (
+                {/* Array(12).fill("").map((item, index) => (
                     //     <div key={index} className="flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]">
                     //         <img
                     //             src={assets.profile_img} alt="" className='w-[35px]
