@@ -1,21 +1,38 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import assets from "./../assets/assets"
 import { AppContext } from '../context/AppContext'
+import { onSnapshot,doc } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const ChatBox = () => {
 
   const {userData,messageId,chatUser,messages,setMessages} = useContext(AppContext);
 
-  const [input,setInput] = useState("")
+  const [input,setInput] = useState("");
+
+  useEffect(()=>{
+    if(messageId){
+      const unSub = onSnapshot(doc(db,'messages',messageId),(res)=>{
+        setMessages(res.data().messages.reverse())
+        console.log(res.data().messages.reverse())
+      })
+      return ()=>{
+        unSub()
+      }
+
+    }
+
+  },[messageId])
 
   return chatUser ?(
     <div className='h-[75vh] relative
      bg-[#f1f5ff]'>
+      
       <div className='py-[10px] px-[15px] flex gap-2 items-center border border-b-[#c6c6c6]'>
-        <img src={assets.profile_img} alt=""
+        <img src={chatUser.userData.avatar} alt=""
           className='w-[40px] rounded-[50%]' />
         <p className='flex-1 font-[500] text-[20px]
-        text-[#393939] flex items-center gap-[5px]'>Chowan Kumar <img src={assets.green_dot} alt="" className='onlien-dot' /></p>
+        text-[#393939] flex items-center gap-[5px]'>{chatUser.userData.name} <img src={assets.green_dot} alt="" className='onlien-dot' /></p>
         <img src={assets.help_icon} alt="" className='w-[25px]' />
       </div>
 
