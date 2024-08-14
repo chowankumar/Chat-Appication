@@ -8,13 +8,19 @@ import { AppContext } from "./../context/AppContext"
 const LeftSideBar = () => {
 
     const navigate = useNavigate();
-    const { userData, chatData } = useContext(AppContext);
+    const {
+        userData, chatData,
+        messages, setMessages,
+        messageId, setMessageId,
+        chatUser, setChatUser
+    } = useContext(AppContext);
+
     const [user, setUser] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
 
 
     const inputHandler = async (e) => {
-         
+
 
         try {
             const input = e.target.value;
@@ -88,9 +94,14 @@ const LeftSideBar = () => {
 
     //set the chat on which we click
 
-    const setChat =(item)=>{
-        console.log(item)
+
+
+    const setChat = (item) => {
+        setMessageId(item.messageId);
+        setChatUser(item)
     }
+
+
     return (
         <div className='bg-[#001030]
          text-white h-[75vh]'>
@@ -131,7 +142,7 @@ const LeftSideBar = () => {
             </div>
 
 
-            
+
             <div className="flex flex-col gap-4 h-[70%] overflow-y-scroll">
                 {showSearch && user ? <div className='friends add-user 
                 flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]'
@@ -143,9 +154,9 @@ const LeftSideBar = () => {
                     <p>{user.name}</p>
 
                 </div> :
-                    chatData.map((item,index) => (
-                        <div  onClick={()=>setChat(item)}
-                         key={index} className="flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]">
+                    chatData.map((item, index) => (
+                        <div onClick={() => setChat(item)}
+                            key={index} className="flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]">
                             <img
                                 src={item.userData.avatar} alt="" className='w-[35px]
                                         aspect-[1/1] rounded-[50%]' />
