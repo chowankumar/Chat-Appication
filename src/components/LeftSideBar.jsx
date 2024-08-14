@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import assets from "./../assets/assets"
 import { useNavigate } from 'react-router-dom'
-import { collection, query,where,getDocs } from 'firebase/firestore';
+import { collection, query,where,getDocs, serverTimestamp, updateDoc,doc,setDoc ,arrayUnion} from 'firebase/firestore';
 import { db } from "../config/firebase"
 import { AppContext } from "./../context/AppContext"
 
@@ -39,6 +39,43 @@ const LeftSideBar = () => {
         }
     }
 
+    //addchat
+    const  addChat = async()=>{
+        const messageRef = collection(db,"message");
+        const chatRef = collection(db,"chats");
+        try {
+            const newMessageRef = doc(messageRef);
+
+            await setDoc(newMessageRef,{
+                createdAt:serverTimestamp(),
+                message:[]
+            })
+            
+            await updateDoc(doc,(chatRef,user.id),{
+                chatData:arrayUnion({
+                    messageId:newMessageRef.id,
+                    lastMessage:"",
+                    rId:userData.id,
+                    updatedAt:Date.now(),
+                    messageSeen:true
+                })
+            })
+            await updateDoc(doc,(chatRef,userData.id),{
+                chatData:arrayUnion({
+                    messageId:newMessageRef.id,
+                    lastMessage:"",
+                    rId:user.id,
+                    updatedAt:Date.now(),
+                    messageSeen:true
+                })
+            })
+        } catch (error) {
+            
+            console.error(error)
+            
+        }
+
+    }
     return (
         <div className='bg-[#001030]
          text-white h-[75vh]'>
@@ -79,7 +116,8 @@ const LeftSideBar = () => {
             </div>
             <div className="flex flex-col gap-4 h-[70%] overflow-y-scroll">
                 {showSearch && user ? <div className='friends add-user 
-                flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]'>
+                flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]'
+                onClick={addChat}>
                     <img
                         src={user.avatar}
                         className='w-[35px]
@@ -87,6 +125,10 @@ const LeftSideBar = () => {
                     <p>{user.name}</p>
 
                 </div> : <></> }
+
+
+
+
                      {/* Array(12).fill("").map((item, index) => (
                     //     <div key={index} className="flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]">
                     //         <img
