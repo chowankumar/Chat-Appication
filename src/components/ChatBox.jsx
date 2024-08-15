@@ -3,8 +3,7 @@ import assets from "./../assets/assets"
 import { AppContext } from '../context/AppContext'
 import { onSnapshot, doc, updateDoc, getDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../config/firebase';
-
-
+import  upload from "../lib/upload"
 const ChatBox = () => {
 
   const { userData, messagesId, chatUser, messages, setMessages } = useContext(AppContext);
@@ -94,7 +93,7 @@ const ChatBox = () => {
 
 
   ///send image function
-  const sendImage = async()=>{
+  const sendImage = async(e)=>{
     try {
 
       const fileUrl = await upload(e.target.files[0]);
@@ -166,10 +165,16 @@ const ChatBox = () => {
           <div
             key={index}
             className={msg.sId === userData.id ? "s-msg":"r-msg"}>
-            <p className="text-white bg-[#077eff]
-            p-[8px] max-w-[200px] text-[11px]
-             font-[300] rounded-t-[5px]  rounded-l-[5px]
-             ">{msg.text}</p>
+             {msg["image"]
+             ? <img  className="w-[250px] rounded-lg" src={msg.image} alt="" /> :
+             <p className="text-white bg-[#077eff]
+             p-[8px] max-w-[200px] text-[11px]
+              font-[300] rounded-t-[5px]  rounded-l-[5px]
+              ">{msg.text}</p>
+
+
+             } 
+          
             <div>
               <img className='w-[27px] rounded-[50px]' src={msg.sId === userData.id ? userData.avatar: chatUser.userData.avatar} alt="" />
               <p className='text-center text-[9px]'>{convertTimesstamp(msg.createdAt)}</p>
@@ -193,7 +198,12 @@ const ChatBox = () => {
           value={input}
         />
 
-        <input type="file" id='image' accept='image/png, image/jpeg' hidden
+        <input 
+        onChange={sendImage}
+        type="file" 
+        id='image' 
+        accept='image/png, image/jpeg' 
+        hidden
         />
 
         <label htmlFor="image" className='flex '>
