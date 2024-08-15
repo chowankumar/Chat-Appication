@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import assets from "./../assets/assets"
 import { useNavigate } from 'react-router-dom'
-import { collection, query, where, getDocs, serverTimestamp, updateDoc, doc, setDoc, arrayUnion } from 'firebase/firestore';
+import { collection, query, where, getDocs, serverTimestamp, updateDoc, doc, setDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { db } from "../config/firebase"
 import { AppContext } from "./../context/AppContext"
 
@@ -94,8 +94,25 @@ const LeftSideBar = () => {
     
     //set the chat on which we click
     const setChat = async (item) => {
-        setMessagesId(item.messageId);
-        setChatUser(item);
+
+        try {
+            setMessagesId(item.messageId);
+            setChatUser(item);
+            const userChatsRef  = doc(db,'chats',userData.id);
+            const userChatsSnapshot = await getDoc(userChatsRef);
+            const userChatsData = userChatsSnapshot.data();
+            const chatIndex = userChatsData.chatData.findIndex((c)=> c.messageId === item.messageId);
+            userChatsData.chatsData[chatIndex].messageSeen = true;
+            await updateDoc(userChatsRef,{
+                chatsData : userChatsData.chatsData
+            })
+            
+        } catch (error) {
+            
+        }
+     
+
+
     }
 
   
@@ -154,7 +171,7 @@ const LeftSideBar = () => {
                 </div> :
                     chatData.map((item, index) => (
                         <div onClick={() => setChat(item)}
-                            key={index} className="flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF]">
+                            key={index} className={`flex items-center gap-3 p-y-[10px] pl-5 cursor-pointer text-[13px] hover:bg-[#077EFF] friends ${item.messageSeen || item.messageId === messagesId ? "" : "border"}`}>
                             <img
                                 src={item.userData.avatar} alt="" className='w-[35px]
                                         aspect-[1/1] rounded-[50%]' />

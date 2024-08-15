@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import assets from "./../assets/assets"
 import { logout } from '../config/firebase'
+import {AppContext} from "../context/AppContext"
 
 const RightSideBar = () => {
+
+  const {chatUser,messages} = useContext(AppContext);
   return (
     <div className='rs text-white bg-[#001030]
     relative h-[75vh] overflow-y-scroll '>
@@ -29,7 +32,7 @@ const RightSideBar = () => {
       </div>
       <button className='absolute bottom-[10px] left-[25%] bg-[#077eff] text-white text-[12px] py-[10px] px-[65px]
        rounded-[20px] cursor-pointer ' 
-       onClick={()=> logout()}>Logout</button>
+       onClick={()=> logout(  )}>Logout</button>
 
     </div>
   )
