@@ -10,8 +10,7 @@ const LeftSideBar = () => {
     const navigate = useNavigate();
     const {
         userData, chatData,
-        messages, setMessages,
-        messageId, setMessageId,
+        messagesId, setMessagesId,
         chatUser, setChatUser
     } = useContext(AppContext);
 
@@ -20,14 +19,12 @@ const LeftSideBar = () => {
 
 
     const inputHandler = async (e) => {
-
-
         try {
             const input = e.target.value;
             if (input) {
                 setShowSearch(true);
                 const userRef = collection(db, 'users');
-                const q = query(userRef, where("username", "==", input.toLowerCase()));
+                const q = query(userRef, where("username","==", input.toLowerCase()));
                 const querySnap = await getDocs(q);
                 if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
                     let userExist = false;
@@ -67,7 +64,7 @@ const LeftSideBar = () => {
             })
 
             await updateDoc(doc(chatRef, user.id), {
-                chatData: arrayUnion({
+                chatsData: arrayUnion({
                     messageId:newMessageRef.id,
                     lastMessage:"",
                     rId: userData.id,
@@ -76,7 +73,7 @@ const LeftSideBar = () => {
                 })
             })
             await updateDoc(doc(chatRef, userData.id), {
-                chatData: arrayUnion({
+                chatsData: arrayUnion({
                     messageId: newMessageRef.id,
                     lastMessage: "",
                     rId: user.id,
@@ -94,11 +91,8 @@ const LeftSideBar = () => {
 
     
     //set the chat on which we click
-
-
-
-    const setChat = (item) => {
-        setMessageId(item.messageId);
+    const setChat = async (item) => {
+        setMessagesId(item.messageId);
         setChatUser(item);
     }
 
@@ -161,7 +155,7 @@ const LeftSideBar = () => {
                             <img
                                 src={item.userData.avatar} alt="" className='w-[35px]
                                         aspect-[1/1] rounded-[50%]' />
-                            <div className='flex flex-col'>
+                           <div className='flex flex-col'>
                                 <p>{item.userData.name}</p>
                                 <span>{item.lastMessage}</span>
                                 

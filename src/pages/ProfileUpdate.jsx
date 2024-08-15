@@ -12,56 +12,28 @@ import { AppContext } from '../context/AppContext';
 const ProfileUpdate = () => {
 
   const navigate = useNavigate()
-  const{setUserData} = useContext(AppContext);
+  const { setUserData } = useContext(AppContext);
+
 
   const [image, setImage] = useState(false);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+
   const [prevImage, setPrevImage] = useState("")
-  const [uid,setUid] = useState("")
+  const [uid, setUid] = useState("")
 
 
-  const profileUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      if (!prevImage && !image) {
-        toast.error("Upload Profile Picture")
-      }
-      const docRef = doc(db,'users',uid);
-      if(image){
-        const imgUrl = await upload(image);
-        setPrevImage(imgUrl);
-        await updateDoc(docRef,{
-          avatar:imgUrl,
-          bio:bio,
-          name:name
-        })
-      }else{
-        await updateDoc(docRef,{
-          bio:bio,
-          name:name
-        })
-      }
-
-      const snap = await getDoc(docRef);
-      setUserData(snap.data())
-      navigate('/chat')
 
 
-    } catch (error) {
-      console.log(error)
-      toast.error(error.message)
-
-    }
-
-  }
 
 
+
+  //this section fetch the data from the firebase and show it on the profile page when user login their  account
   useEffect(() => {
-    onAuthStateChanged(auth,async(user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUid(user.uid);
-        const docRef = doc(db,"users",user.uid);
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.data().name) {
@@ -85,6 +57,48 @@ const ProfileUpdate = () => {
     })
 
   }, [])
+
+
+
+//this function update the profile
+  const profileUpdate = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!prevImage && !image) {
+        toast.error("Upload Profile Picture")
+      }
+
+      const docRef = doc(db, 'users', uid);
+      if (image) {
+        const imgUrl = await upload(image);
+        setPrevImage(imgUrl);
+        await updateDoc(docRef, {
+          avatar: imgUrl,
+          bio: bio,
+          name: name
+        })
+      } else {
+        await updateDoc(docRef, {
+          bio: bio,
+          name: name
+        })
+      }
+
+
+      //when we update the data in profile we will update the userData state
+      const snap = await getDoc(docRef);
+      setUserData(snap.data())
+      navigate('/chat')
+
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+
+    }
+
+  }
   return (
 
     <div
@@ -100,14 +114,14 @@ const ProfileUpdate = () => {
 
           <label htmlFor="avatar" className='flex items-center gap-[10px] text-gray-500 cursor-pointer'>
 
-            <input 
-            onClick={(e) => setImage(e.target.files[0])} 
-            type="file" 
-            id='avatar' 
-            accept='.png, .jpg, .jpeg' 
-            hidden />
+            <input
+              onClick={(e) => setImage(e.target.files[0])}
+              type="file"
+              id='avatar'
+              accept='.png, .jpg, .jpeg'
+              hidden />
 
-            <img src={image ? URL.createObjectURL(image) :prevImage ? prevImage :  assets.avatar_icon} alt=""
+            <img src={image ? URL.createObjectURL(image) : prevImage ? prevImage : assets.avatar_icon} alt=""
               className='w-[50px] rounded-[50%]' />
             upload profile image
 
