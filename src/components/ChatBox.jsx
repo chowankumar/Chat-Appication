@@ -94,8 +94,53 @@ const ChatBox = () => {
 
 
   ///send image function
+  const sendImage = async()=>{
+    try {
 
-  
+      const fileUrl = await upload(e.target.files[0]);
+
+      if(fileUrl && messagesId){
+        await updateDoc(doc(db,'messages',messagesId),{
+          messages: arrayUnion({
+              sId:userData.id,
+              image:fileUrl,
+              createdAt : new Date()
+            })
+        })
+      }
+
+
+      const userIDs = [chatUser.rId, userData.id];
+
+        userIDs.forEach(async (id) => {
+          const userChatsRef = doc(db, 'chats', id);
+          const userChatsSnapshot = await getDoc(userChatsRef);
+
+          if (userChatsSnapshot.exists()) {
+            const userChatData = userChatsSnapshot.data();
+            const chatIndex = userChatData.chatsData.findIndex((c) => c.messageId === messagesId);
+            userChatData.chatsData[chatIndex].lastMessage = "image send";
+            userChatData.chatsData[chatIndex].updatedAt = Date.now();
+
+            if (userChatData.chatsData[chatIndex].rId === userData.id) {
+              userChatData.chatData[chatIndex].messageSeen = false;
+            }
+            await updateDoc(userChatsRef, {
+              chatsData: userChatData.chatsData
+            })
+
+          }
+        })
+
+      
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
+   
 
 
   return chatUser ? (
