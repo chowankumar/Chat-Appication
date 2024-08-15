@@ -77,6 +77,26 @@ const ChatBox = () => {
 
   }
 
+    //show the time am and pm
+
+    const convertTimesstamp =(timestamp)=>{
+      let date = timestamp.toDate();
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      if(hour > 12){
+          return hour-12 + ":" + minute + " PM"
+      }else{
+
+          return hour + ":" + minute + " AM"
+      }
+
+  }
+
+
+  ///send image function
+
+  
+
 
   return chatUser ? (
     <div className='h-[75vh] relative
@@ -107,7 +127,7 @@ const ChatBox = () => {
              ">{msg.text}</p>
             <div>
               <img className='w-[27px] rounded-[50px]' src={msg.sId === userData.id ? userData.avatar: chatUser.userData.avatar} alt="" />
-              <p className='text-center text-[9px]'>2:30 PM</p>
+              <p className='text-center text-[9px]'>{convertTimesstamp(msg.createdAt)}</p>
             </div>
           </div>
 

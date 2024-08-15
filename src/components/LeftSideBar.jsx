@@ -18,6 +18,8 @@ const LeftSideBar = () => {
     const [showSearch, setShowSearch] = useState(false);
 
 
+
+
     const inputHandler = async (e) => {
         try {
             const input = e.target.value;
@@ -96,6 +98,7 @@ const LeftSideBar = () => {
         setChatUser(item);
     }
 
+  
 
     return (
         <div className='bg-[#001030]
