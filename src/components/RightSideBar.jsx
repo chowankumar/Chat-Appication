@@ -39,8 +39,10 @@ const RightSideBar = () => {
         <div className='max-h-[180px] overflow-y-scroll grid grid-cols-3 gap-[5px] mt-[8px]'>
           {
             msgImages.map((url,index)=>(
-               <img src={url}
-               key={index} />
+               <img 
+               src={url}
+               key={index}
+               onClick={()=>window.open(url)} />
 
             ))
           }
