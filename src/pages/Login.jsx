@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import assets from "./../assets/assets"
-import { signup,Login,logout } from '../config/firebase'
+import { signup,Login,resetPass } from '../config/firebase'
 
 const login = () => {
 
@@ -85,6 +85,10 @@ const login = () => {
               <p className='text-[13px] text-[#5c5c5c]'>Create an Account <span className='font-[500] text-[#077EFF]
             cursor-pointer' onClick={() => setCurrState("Sign Up")}>click here</span></p>
 
+          }
+          {
+            currState === "Login"?<p className='text-[13px] text-[#5c5c5c]'>Forget Password <span className='font-[500] text-[#077EFF]
+            cursor-pointer' onClick={() => resetPass(email)}>reset here</span></p>:null
           }
 
 
